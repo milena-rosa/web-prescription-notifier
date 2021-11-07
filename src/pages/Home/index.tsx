@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 import logo from '../../assets/logo.png'
 import { Button } from '../../components/Button'
@@ -8,10 +9,10 @@ export function Home() {
   return (
     <Container>
       <Sidebar>
-        <Button buttonStyle={{ height: '3.75rem', marginBottom: '2rem' }}>Cadastro de Profissionais</Button>
-        <Button buttonStyle={{ height: '3.75rem', marginBottom: '2rem' }}>Autorização</Button>
-        <Button buttonStyle={{ height: '3.75rem', marginBottom: '2rem' }}>Impressão de Registros</Button>
-        <Button buttonStyle={{ height: '3.75rem' }}>Numeração Concedida - DRS X</Button>
+        <Link to="registration">Cadastro de Profissionais</Link>
+        <Link to="authorization">Autorização</Link>
+        <Link to="recordPrinting">Impressão de Registros</Link>
+        <Link to="numbering">Numeração Concedida - DRS X</Link>
       </Sidebar>
       <MainContent>
         <footer>

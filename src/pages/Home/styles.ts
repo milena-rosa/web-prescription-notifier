@@ -21,6 +21,34 @@ export const Sidebar = styled.aside`
   height: 100%;
   padding: 5.5rem 2rem 0 2rem;
   width: 32.5rem;
+
+  a {
+    align-items: center;
+    background: var(--green-primary);
+    border: 0;
+    border-radius: 3.125rem;
+    box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.8);
+    color: var(--white);
+    display: flex;
+    font-weight: bold;
+    font-size: 1rem;
+    height: 3.75rem;
+    justify-content: center;
+    letter-spacing: 0.03em;
+    line-height: 1.1875rem;
+    min-width: 7.5rem;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+
+    & + a {
+      margin-top: 2rem;
+    }
+
+    &:hover {
+      transform: translate(1px, 1px);
+    }
+  }
 `
 
 export const MainContent = styled.main`
