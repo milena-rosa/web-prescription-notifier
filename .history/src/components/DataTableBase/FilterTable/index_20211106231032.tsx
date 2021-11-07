@@ -1,0 +1,65 @@
+import React, { ChangeEvent, ReactElement, useState } from 'react'
+import { Filter, Search } from '@somostera/tera-icons'
+import { Popover } from 'react-tiny-popover'
+
+import { InputSmall } from 'core/components/InputSmall'
+
+import { Container, MoreFiltersButton, ResetButton } from './styles'
+
+interface FilterTableProps {
+  filterText: string
+  onFilter: (event: ChangeEvent<HTMLInputElement>) => void
+  onClear: () => void
+  placeholder?: string
+  hasMoreFilters?: boolean
+  numberOfSelectedFilters?: number
+  MoreFiltersComponent?: ReactElement
+}
+
+export const FilterTable = ({
+  filterText,
+  onFilter,
+  onClear,
+  placeholder,
+  hasMoreFilters = false,
+  numberOfSelectedFilters = 0,
+  MoreFiltersComponent = <div>teste</div>
+}: FilterTableProps) => {
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false)
+
+  return (
+    <Container>
+      <InputSmall
+        name="search"
+        placeholder={placeholder}
+        icon={() => <Search />}
+        value={filterText}
+        onChange={onFilter}
+      />
+      {hasMoreFilters && (
+        <Popover
+          isOpen={isPopoverOpen}
+          positions={['bottom', 'right']}
+          onClickOutside={() => setIsPopoverOpen(false)}
+          reposition={false}
+          padding={4}
+          content={MoreFiltersComponent}
+          align="start"
+        >
+          <MoreFiltersButton
+            hasSelectedFilter={numberOfSelectedFilters > 0}
+            onClick={() => setIsPopoverOpen(!isPopoverOpen)}
+          >
+            {numberOfSelectedFilters === 0 ? (
+              <Filter color="var(--white)" size={20} />
+            ) : (
+              <div>{numberOfSelectedFilters}</div>
+            )}
+            Filtros
+          </MoreFiltersButton>
+        </Popover>
+      )}
+      <ResetButton onClick={onClear}>Limpar filtros</ResetButton>
+    </Container>
+  )
+}
