@@ -2,12 +2,14 @@ import React from 'react'
 
 import { Container } from './styles'
 
-function Header() {
+export function Header() {
+  // const { user } = useAuth()
+
   return (
     <Container>
-      <h1>Header</h1>
+      <p>Vigilância Sanitária</p>
+      <h1>Software de Cadastro de Notificadores de Receituário</h1>
+      <p>Nome do usuário</p>
     </Container>
   )
 }
-
-export default Header
