@@ -44,7 +44,6 @@ export const Container = styled.div`
   }
 
   footer {
-    /* background: lime; */
     align-self: flex-end;
 
     > img {
