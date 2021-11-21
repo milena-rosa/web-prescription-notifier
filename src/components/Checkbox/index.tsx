@@ -1,4 +1,4 @@
-import React, { forwardRef, InputHTMLAttributes } from 'react'
+import React, { InputHTMLAttributes } from 'react'
 
 import { Label, CheckboxContainer, HiddenCheckbox, StyledCheckbox, Icon } from './styles'
 
@@ -6,7 +6,7 @@ interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
   labelText?: string
 }
 
-export const Checkbox = forwardRef(({ labelText, checked, ...rest }: CheckboxProps) => {
+export const Checkbox = ({ labelText, checked, ...rest }: CheckboxProps) => {
   return (
     <Label>
       <CheckboxContainer>
@@ -18,4 +18,4 @@ export const Checkbox = forwardRef(({ labelText, checked, ...rest }: CheckboxPro
       {labelText && <span>{labelText}</span>}
     </Label>
   )
-})
+}
