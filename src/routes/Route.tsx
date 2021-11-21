@@ -1,5 +1,6 @@
 import React, { ComponentType } from 'react'
 import { RouteProps as ReactDOMRouteProps, Route as ReactDOMRoute, Redirect } from 'react-router-dom'
+import { useAuth } from '../hooks/useAuth'
 
 import { PrivateRouteComponent } from './PrivateRouteComponent'
 
@@ -9,17 +10,17 @@ interface RouteProps extends ReactDOMRouteProps {
 }
 
 export function Route({ isPrivate = false, component: Component, ...rest }: RouteProps) {
-  const isSigned = true
+  const { isAuthenticated } = useAuth()
 
   return (
     <ReactDOMRoute
       {...rest}
       render={({ location }) =>
-        isPrivate && isSigned ? (
+        isPrivate && isAuthenticated ? (
           <PrivateRouteComponent>
             <Component />
           </PrivateRouteComponent>
-        ) : !isPrivate && !isSigned ? (
+        ) : !isPrivate && !isAuthenticated ? (
           <Component />
         ) : (
           <Redirect

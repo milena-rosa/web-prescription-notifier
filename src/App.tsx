@@ -1,14 +1,14 @@
 import React from 'react'
-import { BrowserRouter as Router } from 'react-router-dom'
 
 import { Routes } from './routes'
 import { GlobalStyle } from './styles/global'
+import { AppProvider } from './hooks'
 
 export function App() {
   return (
-    <Router>
+    <AppProvider>
       <Routes />
       <GlobalStyle />
-    </Router>
+    </AppProvider>
   )
 }

@@ -14,9 +14,10 @@ interface InputContainerProps {
 export const InputContainer = styled.div<InputContainerProps>`
   background: ${(props) => (props.disabled ? 'var(--gray-light)' : 'var(--green-primary-15)')};
   border: 1px solid ${(props) => (props.disabled ? 'transparent' : 'var(--green-primary)')};
-  border-radius: 1rem;
+  border-radius: 0.625rem;
   color: ${(props) => (props.disabled ? 'var(--gray)' : 'var(--black)')};
-  height: 3.75rem;
+  height: 1.76rem;
+  position: relative;
 
   ${(props) =>
     props.isFocused &&
@@ -36,6 +37,7 @@ export const InputContainer = styled.div<InputContainerProps>`
     font-size: 1.125rem;
     line-height: 1.3125rem;
     height: 100%;
+    min-height: 1.76rem;
     outline: 0;
     padding-left: 0.58rem;
     width: 100%;
@@ -54,11 +56,11 @@ export const InputInformationContainer = styled.div`
   label {
     color: var(--black);
     display: block;
-    font-size: 1.25rem;
-    line-height: 1.4375rem;
-    margin-bottom: 0.5rem;
-    padding-left: 0.625rem;
+    font-size: 1.125rem;
+    font-weight: bold;
+    line-height: 1.3125rem;
     text-transform: uppercase;
+    margin-bottom: 0.25rem;
   }
 `
 

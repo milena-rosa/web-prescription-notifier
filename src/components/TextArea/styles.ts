@@ -5,18 +5,19 @@ export const Container = styled.div`
   flex-direction: column;
 `
 
-interface InputContainerProps {
+interface TextAreaContainerProps {
   isFocused: boolean
   isInvalid: boolean
   disabled: boolean
 }
 
-export const InputContainer = styled.div<InputContainerProps>`
+export const TextAreaContainer = styled.div<TextAreaContainerProps>`
   background: ${(props) => (props.disabled ? 'var(--gray-light)' : 'var(--green-primary-15)')};
   border: 1px solid ${(props) => (props.disabled ? 'transparent' : 'var(--green-primary)')};
-  border-radius: 1rem;
+  border-radius: 0.625rem;
   color: ${(props) => (props.disabled ? 'var(--gray)' : 'var(--black)')};
-  height: 3.75rem;
+  height: 14rem;
+  position: relative;
 
   ${(props) =>
     props.isFocused &&
@@ -30,14 +31,14 @@ export const InputContainer = styled.div<InputContainerProps>`
       border-color: var(--red);
     `}
 
-  input {
+  textarea {
     background: transparent;
     border: 0;
-    font-size: 1.125rem;
-    line-height: 1.3125rem;
+    font-size: 1.5rem;
+    line-height: 1.75rem;
     height: 100%;
     outline: 0;
-    padding-left: 0.58rem;
+    padding: 0.75rem;
     width: 100%;
 
     &::placeholder {
@@ -46,7 +47,7 @@ export const InputContainer = styled.div<InputContainerProps>`
   }
 `
 
-export const InputInformationContainer = styled.div`
+export const TextAreaInformationContainer = styled.div`
   align-items: baseline;
   display: flex;
   justify-content: space-between;

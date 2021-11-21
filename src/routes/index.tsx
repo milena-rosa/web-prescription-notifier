@@ -1,8 +1,8 @@
 import React from 'react'
-import { Switch } from 'react-router-dom'
+import { Switch, BrowserRouter as Router } from 'react-router-dom'
 
 import { Home } from '../pages/Home'
-import Registration from '../pages/Registration'
+import { Registration } from '../pages/Registration'
 import { SignIn } from '../pages/SignIn'
 import { Route } from './Route'
 
@@ -16,10 +16,12 @@ export function Routes() {
   // }
 
   return (
-    <Switch>
-      <Route path="/" exact component={SignIn} />
-      <Route path="/home" exact component={Home} isPrivate />
-      <Route path="/registration" exact component={Registration} isPrivate />
-    </Switch>
+    <Router>
+      <Switch>
+        <Route path="/" exact component={SignIn} />
+        <Route path="/home" exact component={Home} isPrivate />
+        <Route path="/registration" exact component={Registration} isPrivate />
+      </Switch>
+    </Router>
   )
 }

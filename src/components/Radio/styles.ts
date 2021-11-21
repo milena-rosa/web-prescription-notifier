@@ -1,35 +1,34 @@
 import styled from 'styled-components'
 
-import { Check } from '../Icon'
-
-export const Icon = styled(Check).attrs({
-  color: 'var(--white)',
-  size: '18'
-})``
+export const Icon = styled.div`
+  background: var(--green-primary);
+  border-radius: 50%;
+  height: 0.625rem;
+  margin: 0.125rem;
+  width: 0.625rem;
+`
 
 export const Label = styled.label`
   align-items: center;
   display: flex;
 
   > span {
-    margin-left: 0.5rem;
     font-size: 1.5rem;
     line-height: 1.75rem;
-    margin-right: 2rem;
-    text-transform: uppercase;
+    margin: 0 0.625rem;
   }
 `
 
-interface StyledCheckboxProps {
+interface StyledRadioProps {
   checked?: boolean
 }
 
-export const CheckboxContainer = styled.div`
+export const RadioContainer = styled.div`
   display: inline-block;
   vertical-align: middle;
 `
 
-export const HiddenCheckbox = styled.input`
+export const HiddenRadio = styled.input`
   border: 0;
   clip: rect(0 0 0 0);
   clip-path: inset(50%);
@@ -42,18 +41,18 @@ export const HiddenCheckbox = styled.input`
   width: 1px;
 `
 
-export const StyledCheckbox = styled.div<StyledCheckboxProps>`
+export const StyledRadio = styled.div<StyledRadioProps>`
   align-items: center;
-  background: ${(props) => (props.checked ? 'var(--green-primary)' : 'var(--white)')};
-  border: 0.125rem solid ${(props) => (props.checked ? 'var(--green-primary)' : 'var(--gray)')};
+  border: 0.125rem solid var(--green-primary);
+  border-radius: 50%;
   cursor: pointer;
   display: flex;
-  height: 1.5rem;
+  height: 1.125rem;
   justify-content: center;
-  transition: box-shadow visibility 150ms;
-  width: 1.5rem;
+  transition: all 150ms;
+  width: 1.125rem;
 
-  ${HiddenCheckbox}:focus + & {
+  ${HiddenRadio}:focus + & {
     box-shadow: 0 0 0 0.1rem var(--gray-light);
   }
 

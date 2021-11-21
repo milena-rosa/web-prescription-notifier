@@ -2,9 +2,10 @@ import React from 'react'
 
 import logo from '../../assets/logo.png'
 import { Button } from '../../components/Button'
-import { Input } from '../../components/Input'
+import { SignInInput } from '../../components/SignInInput'
 import { useForm } from '../../hooks/useForm'
 import { Container } from './styles'
+import { useAuth } from '../../hooks/useAuth'
 
 interface SignInFormValues {
   user: string
@@ -12,13 +13,24 @@ interface SignInFormValues {
 }
 
 export const SignIn: React.FC = () => {
+  const { signIn } = useAuth()
+
+  const handleSignIn = async () => {
+    try {
+      await signIn({ email: user, password })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const {
     data: { user, password },
     handleChange,
+    handleSubmit,
     errors
   } = useForm<SignInFormValues>({
     initialValues: { user: '', password: '' },
-    onSubmit: (event) => console.log(event),
+    onSubmit: handleSignIn,
     validations: {
       user: { required: { value: true, message: 'Preencha o campo obrigatório.' } },
       password: { required: { value: true, message: 'Preencha o campo obrigatório.' } }
@@ -28,8 +40,8 @@ export const SignIn: React.FC = () => {
   return (
     <Container>
       <header>Software de Cadastro de Notificadores de Receituários</header>
-      <div>
-        <Input
+      <form onSubmit={handleSubmit}>
+        <SignInInput
           name="user"
           label="Usuário"
           type="text"
@@ -39,7 +51,7 @@ export const SignIn: React.FC = () => {
           errors={errors.user}
           containerStyle={{ marginBottom: '1.875rem', width: '18.3425rem' }}
         />
-        <Input
+        <SignInInput
           name="password"
           label="Senha"
           type="password"
@@ -49,8 +61,8 @@ export const SignIn: React.FC = () => {
           errors={errors.password}
           containerStyle={{ marginBottom: '1.875rem', width: '18.3425rem' }}
         />
-        <Button>Entrar</Button>
-      </div>
+        <Button type="submit">Entrar</Button>
+      </form>
       <footer>
         <img src={logo} alt="Vigilância Sanitária" />
       </footer>

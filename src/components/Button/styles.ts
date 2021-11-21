@@ -19,9 +19,9 @@ export const Container = styled.button`
   text-transform: uppercase;
 
   &:disabled {
-    background: var(--gray-20);
+    background: var(--gray-light);
     box-shadow: 0 6px 12px rgba(51, 51, 51, 0.25);
-    color: var(--gray-40);
+    color: var(--gray);
   }
 
   &:hover {

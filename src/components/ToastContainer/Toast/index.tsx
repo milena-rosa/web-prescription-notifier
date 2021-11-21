@@ -11,9 +11,9 @@ interface ToastProps {
 }
 
 const icons = {
-  info: <ExclamationMarkCircle size={24} color="var(--blue-primary)" />,
-  error: <XCircle size={24} color="var(--orange)" />,
-  success: <CheckCircle size={24} color="var(--green-80)" />
+  info: <ExclamationMarkCircle size={24} color="var(--yellow)" />,
+  error: <XCircle size={24} color="var(--red)" />,
+  success: <CheckCircle size={24} color="var(--green-primary)" />
 }
 
 export function Toast({ message, style }: ToastProps) {
@@ -44,7 +44,7 @@ export function Toast({ message, style }: ToastProps) {
         }}
         type="button"
       >
-        <X size={12} color="var(--gray-60)" />
+        <X size={12} color="var(--gray)" />
       </button>
     </Container>
   )

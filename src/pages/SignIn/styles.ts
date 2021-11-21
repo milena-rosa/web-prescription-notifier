@@ -32,7 +32,7 @@ export const Container = styled.div`
     width: 100%;
   }
 
-  > div {
+  > form {
     align-items: center;
     background-color: var(--white);
     display: flex;
