@@ -8,6 +8,8 @@ import { NavigationBar } from '../../components/NavigationBar'
 import { Radio } from '../../components/Radio'
 import { TextArea } from '../../components/TextArea'
 import { useForm } from '../../hooks/useForm'
+import { findAddressByCep } from '../../utils/address'
+import { toDate } from '../../utils/date'
 import {
   ButtonsContainer,
   CheckboxContainer,
@@ -18,12 +20,12 @@ import {
   HorizontalContainer
 } from './styles'
 
-enum RegistrationTypes {
+enum PrescriptionTypes {
   A = 'Receituário A',
   B_B2_RETINOIDES = 'Receituário B, B2 ou Retinóides'
 }
 
-enum CouncilTypes {
+enum council_types {
   CRM = 'CRM',
   CRO = 'CRO',
   CRMV = 'CRMV'
@@ -40,41 +42,50 @@ interface Address {
 }
 
 interface RegistrationFormValues {
-  registrationNumber: string
-  registrationType: RegistrationTypes[]
-  createdAt: string
-  recordNumberA: string
-  recordNumberB: string
-  professionalOrInstitutionName: string
-  technicalOrClinicalDirector: string
-  professionalCouncil: string
-  councilType: CouncilTypes
+  registration_number: string
+  registration_date: string
+  record_number_a: string
+  record_number_b: string
+  // string[]?
+  prescription_types: PrescriptionTypes[]
+  professional_or_institution_name: string
+  technical_or_clinical_director: string
+  professional_council_register: string
+  // string?
+  council_type: council_types
   specialty: string
-  telephoneNumber: string
-  cellphoneNumber: string
+  telephone_number: string
+  cellphone_number: string
   email: string
-  businessAddress: Address
-  homeAddress: Address
+  business_address: Address
+  home_address: Address
   comments: string
 }
 
 export function Registration() {
+  const handleSave = (event: any) => {
+    console.log('DATA', data)
+    console.log(toDate(data.registration_date))
+    console.log(data.prescription_types)
+    console.log(data.council_type)
+  }
+
   const { data, handleChange, errors, setValue, handleSubmit } = useForm<RegistrationFormValues>({
     initialValues: {
-      registrationNumber: '',
-      registrationType: [],
-      createdAt: '',
-      recordNumberA: '',
-      recordNumberB: '',
-      professionalOrInstitutionName: '',
-      technicalOrClinicalDirector: '',
-      professionalCouncil: '',
-      councilType: CouncilTypes.CRM,
+      registration_number: '',
+      registration_date: '',
+      record_number_a: '',
+      record_number_b: '',
+      prescription_types: [],
+      professional_or_institution_name: '',
+      technical_or_clinical_director: '',
+      professional_council_register: '',
+      council_type: council_types.CRM,
       specialty: '',
-      telephoneNumber: '',
-      cellphoneNumber: '',
+      telephone_number: '',
+      cellphone_number: '',
       email: '',
-      businessAddress: {
+      business_address: {
         street: '',
         number: '',
         complement: '',
@@ -83,7 +94,7 @@ export function Registration() {
         city: '',
         uf: ''
       },
-      homeAddress: {
+      home_address: {
         street: '',
         number: '',
         complement: '',
@@ -94,62 +105,88 @@ export function Registration() {
       },
       comments: ''
     },
-    onSubmit: (event) => console.log(event)
+    onSubmit: handleSave
   })
 
-  const handleSelectRegistrationType = (newValue: boolean, itemLabel: RegistrationTypes) => {
+  const handleSelectPrescriptionType = (newValue: boolean, itemLabel: PrescriptionTypes) => {
     if (newValue) {
-      setValue('registrationType', [...data.registrationType, itemLabel])
+      setValue('prescription_types', [...data.prescription_types, itemLabel])
     } else {
-      const newRegisters = data.registrationType.filter((item) => item !== itemLabel)
-      setValue('registrationType', newRegisters)
+      const newRegisters = data.prescription_types.filter((item) => item !== itemLabel)
+      setValue('prescription_types', newRegisters)
     }
   }
 
-  console.log('DATA', data)
+  const handleFindBusinessAddress = async () => {
+    const address = await findAddressByCep(data.business_address.cep)
+    if (address) {
+      const { street, district, city, uf } = address
+      setValue('business_address', {
+        ...data.business_address,
+        street,
+        district,
+        city,
+        uf
+      })
+    }
+  }
+
+  const handleFindHomeAddress = async () => {
+    const address = await findAddressByCep(data.home_address.cep)
+    if (address) {
+      const { street, district, city, uf } = address
+      setValue('home_address', {
+        ...data.home_address,
+        street,
+        district,
+        city,
+        uf
+      })
+    }
+  }
 
   return (
     <Container>
       <NavigationBar />
       <form onSubmit={handleSubmit}>
-        {/* TODO FICHA DE CADASTRO */}
+        {/* FICHA DE CADASTRO */}
         <FormHeader>Informações da Ficha de Cadastro</FormHeader>
 
         <FieldsContainer>
           <HorizontalContainer>
             <Input
-              name="registrationNumber"
+              name="registration_number"
               label="Número do Cadastro"
               type="text"
               placeholder="xxxxxx/xxxx"
-              value={data.registrationNumber}
-              onChange={handleChange('registrationNumber')}
-              errors={errors.registrationNumber}
+              value={data.registration_number}
+              onChange={handleChange('registration_number')}
+              errors={errors.registration_number}
               containerStyle={{ marginRight: '5.625rem', width: '15.625rem' }}
             />
             <Input
-              name="createdAt"
+              name="registration_date"
               label="Data do Cadastro"
               type="date"
               placeholder="xx/xx/xxxx"
-              value={data.createdAt}
-              onChange={handleChange('createdAt')}
-              errors={errors.createdAt}
+              value={data.registration_date}
+              onChange={handleChange('registration_date')}
+              errors={errors.registration_date}
               containerStyle={{ marginRight: '5.625rem', width: '15.625rem' }}
             />
             <CheckboxContainer>
               <Label>Tipo de Cadastro</Label>
               <div>
                 <Checkbox
-                  labelText={RegistrationTypes.A}
-                  checked={!!data.registrationType.find((item) => item === RegistrationTypes.A)}
-                  onChange={(event) => handleSelectRegistrationType(event.target.checked, RegistrationTypes.A)}
+                  labelText={PrescriptionTypes.A}
+                  checked={!!data.prescription_types.find((item) => item === PrescriptionTypes.A)}
+                  onChange={(event) => handleSelectPrescriptionType(event.target.checked, PrescriptionTypes.A)}
                 />
                 <Checkbox
-                  labelText={RegistrationTypes.B_B2_RETINOIDES}
-                  checked={!!data.registrationType.find((item) => item === RegistrationTypes.B_B2_RETINOIDES)}
+                  labelText={PrescriptionTypes.B_B2_RETINOIDES}
+                  checked={!!data.prescription_types.find((item) => item === PrescriptionTypes.B_B2_RETINOIDES)}
                   onChange={(event) =>
-                    handleSelectRegistrationType(event.target.checked, RegistrationTypes.B_B2_RETINOIDES)
+                    handleSelectPrescriptionType(event.target.checked, PrescriptionTypes.B_B2_RETINOIDES)
                   }
                 />
               </div>
@@ -157,90 +194,90 @@ export function Registration() {
           </HorizontalContainer>
           <HorizontalContainer>
             <Input
-              name="recordNumberA"
+              name="record_number_a"
               label="Número da Ficha A"
               type="text"
               placeholder="xxx"
-              value={data.recordNumberA}
-              onChange={handleChange('recordNumberA')}
-              errors={errors.recordNumberA}
+              value={data.record_number_a}
+              onChange={handleChange('record_number_a')}
+              errors={errors.record_number_a}
               containerStyle={{ marginRight: '5.625rem', width: '15.625rem' }}
             />
             <Input
-              name="recordNumberB"
+              name="record_number_b"
               label="Número da Ficha B"
               type="text"
               placeholder="xxx"
-              value={data.recordNumberB}
-              onChange={handleChange('recordNumberB')}
-              errors={errors.recordNumberB}
+              value={data.record_number_b}
+              onChange={handleChange('record_number_b')}
+              errors={errors.record_number_b}
               containerStyle={{ width: '15.625rem' }}
             />
           </HorizontalContainer>
         </FieldsContainer>
 
-        {/* TODO DADOS DO PRESCRITOR */}
+        {/* DADOS DO PRESCRITOR */}
         <FormHeader>Dados do Prescritor</FormHeader>
 
         <FieldsContainer>
           <HorizontalContainer>
             <Input
-              name="professionalOrInstitutionName"
+              name="professional_or_institution_name"
               label="Nome do Profissional ou Instituição"
               type="text"
               placeholder="Digite o nome do Profissional ou Instituição"
-              value={data.professionalOrInstitutionName}
-              onChange={handleChange('professionalOrInstitutionName')}
-              errors={errors.professionalOrInstitutionName}
+              value={data.professional_or_institution_name}
+              onChange={handleChange('professional_or_institution_name')}
+              errors={errors.professional_or_institution_name}
               containerStyle={{ width: '86rem' }}
             />
           </HorizontalContainer>
           <HorizontalContainer>
             <Input
-              name="technicalOrClinicalDirector"
+              name="technical_or_clinical_director"
               label="Responsável técnico ou Diretor clínico da Instituição (Apenas quando se tratar de pessoa jurídica)"
               type="text"
               placeholder="Digite o nome do Responsável Técnico ou Diretor Clínico da Instituição"
-              value={data.technicalOrClinicalDirector}
-              onChange={handleChange('technicalOrClinicalDirector')}
-              errors={errors.technicalOrClinicalDirector}
+              value={data.technical_or_clinical_director}
+              onChange={handleChange('technical_or_clinical_director')}
+              errors={errors.technical_or_clinical_director}
               containerStyle={{ width: '86rem' }}
             />
           </HorizontalContainer>
           <HorizontalContainer>
             <Input
-              name="professionalCouncil"
+              name="professional_council_register"
               label="Conselho Profissional"
               type="text"
               placeholder="Digite o Conselho Profissional"
-              value={data.professionalCouncil}
-              onChange={handleChange('professionalCouncil')}
-              errors={errors.professionalCouncil}
+              value={data.professional_council_register}
+              onChange={handleChange('professional_council_register')}
+              errors={errors.professional_council_register}
               containerStyle={{ marginRight: '5.625rem', width: '18.75rem' }}
             />
             <RadioContainer>
               <Label>Tipo do Conselho</Label>
               <div>
                 <Radio
-                  name="councilType"
-                  labelText={CouncilTypes.CRM}
-                  value={CouncilTypes.CRM}
-                  checked={data.councilType === CouncilTypes.CRM}
-                  onChange={handleChange('councilType')}
+                  name="council_type"
+                  labelText={council_types.CRM}
+                  value={council_types.CRM}
+                  checked={data.council_type === council_types.CRM}
+                  onChange={handleChange('council_type')}
                 />
                 <Radio
-                  name="councilType"
-                  labelText={CouncilTypes.CRO}
-                  value={CouncilTypes.CRO}
-                  checked={data.councilType === CouncilTypes.CRO}
-                  onChange={handleChange('councilType')}
+                  name="council_type"
+                  labelText={council_types.CRO}
+                  value={council_types.CRO}
+                  checked={data.council_type === council_types.CRO}
+                  onChange={handleChange('council_type')}
                 />
                 <Radio
-                  name="councilType"
-                  labelText={CouncilTypes.CRMV}
-                  value={CouncilTypes.CRMV}
-                  checked={data.councilType === CouncilTypes.CRMV}
-                  onChange={handleChange('councilType')}
+                  name="council_type"
+                  labelText={council_types.CRMV}
+                  value={council_types.CRMV}
+                  checked={data.council_type === council_types.CRMV}
+                  onChange={handleChange('council_type')}
                 />
               </div>
             </RadioContainer>
@@ -257,23 +294,23 @@ export function Registration() {
           </HorizontalContainer>
           <HorizontalContainer>
             <Input
-              name="telephoneNumber"
+              name="telephone_number"
               label="Telefone"
               type="text"
               placeholder="(xx) xxxx-xxxx"
-              value={data.telephoneNumber}
-              onChange={handleChange('telephoneNumber')}
-              errors={errors.telephoneNumber}
+              value={data.telephone_number}
+              onChange={handleChange('telephone_number')}
+              errors={errors.telephone_number}
               containerStyle={{ marginRight: '5.625rem', width: '18.75rem' }}
             />
             <Input
-              name="cellphoneNumber"
+              name="cellphone_number"
               label="Celular"
               type="text"
               placeholder="(xx) xxxxx-xxxx"
-              value={data.cellphoneNumber}
-              onChange={handleChange('cellphoneNumber')}
-              errors={errors.cellphoneNumber}
+              value={data.cellphone_number}
+              onChange={handleChange('cellphone_number')}
+              errors={errors.cellphone_number}
               containerStyle={{ marginRight: '5.625rem', width: '18.75rem' }}
             />
             <Input
@@ -295,110 +332,111 @@ export function Registration() {
         <FieldsContainer>
           <HorizontalContainer>
             <Input
-              name="businessAddressStreet"
+              name="business_address_cep"
+              label="CEP"
+              type="text"
+              placeholder="xxxxx-xxx"
+              value={data.business_address.cep}
+              onChange={(event) =>
+                setValue('business_address', {
+                  ...data.business_address,
+                  cep: event.target.value
+                })
+              }
+              onBlur={handleFindBusinessAddress}
+              errors={errors.business_address}
+              containerStyle={{ marginRight: '2.5rem', width: '13.125rem' }}
+            />
+            <Input
+              name="business_address_street"
               label="Endereço comercial"
               type="text"
               placeholder="Digite o logradouro"
-              value={data.businessAddress.street}
+              value={data.business_address.street}
               onChange={(event) =>
-                setValue('businessAddress', {
-                  ...data.businessAddress,
+                setValue('business_address', {
+                  ...data.business_address,
                   street: event.target.value
                 })
               }
-              errors={errors.businessAddress}
+              errors={errors.business_address}
               containerStyle={{ marginRight: '2.5rem', width: '50rem' }}
             />
             <Input
-              name="businessAddressNumber"
+              name="business_address_number"
               label="Nº"
               type="text"
               placeholder="xxxx"
-              value={data.businessAddress.number}
+              value={data.business_address.number}
               onChange={(event) =>
-                setValue('businessAddress', {
-                  ...data.businessAddress,
+                setValue('business_address', {
+                  ...data.business_address,
                   number: event.target.value
                 })
               }
-              errors={errors.businessAddress}
+              errors={errors.business_address}
               containerStyle={{ marginRight: '5.625rem', width: '6.875rem' }}
-            />
-            <Input
-              name="businessAddressComplement"
-              label="Complemento"
-              type="text"
-              placeholder="Digite o Complemento"
-              value={data.businessAddress.complement}
-              onChange={(event) =>
-                setValue('businessAddress', {
-                  ...data.businessAddress,
-                  complement: event.target.value
-                })
-              }
-              errors={errors.businessAddress}
-              containerStyle={{ width: '21rem' }}
             />
           </HorizontalContainer>
           <HorizontalContainer>
             <Input
-              name="businessAddressDistrict"
+              name="business_address_complement"
+              label="Complemento"
+              type="text"
+              placeholder="Digite o Complemento"
+              value={data.business_address.complement}
+              onChange={(event) =>
+                setValue('business_address', {
+                  ...data.business_address,
+                  complement: event.target.value
+                })
+              }
+              errors={errors.business_address}
+              containerStyle={{ marginRight: '2.5rem', width: '18rem' }}
+            />
+            <Input
+              name="business_address_district"
               label="Bairro"
               type="text"
               placeholder="Digite o bairro"
-              value={data.businessAddress.district}
+              value={data.business_address.district}
               onChange={(event) =>
-                setValue('businessAddress', {
-                  ...data.businessAddress,
+                setValue('business_address', {
+                  ...data.business_address,
                   district: event.target.value
                 })
               }
-              errors={errors.businessAddress}
-              containerStyle={{ marginRight: '2.5rem', width: '25.25rem' }}
+              errors={errors.business_address}
+              containerStyle={{ marginRight: '2.5rem', width: '22.25rem' }}
             />
             <Input
-              name="businessAddressCep"
-              label="CEP"
-              type="text"
-              placeholder="xxxxx-xxx"
-              value={data.businessAddress.cep}
-              onChange={(event) =>
-                setValue('businessAddress', {
-                  ...data.businessAddress,
-                  cep: event.target.value
-                })
-              }
-              errors={errors.businessAddress}
-              containerStyle={{ marginRight: '5.625rem', width: '13.125rem' }}
-            />
-            <Input
-              name="businessAddressCity"
+              name="business_address_city"
               label="Cidade"
               type="text"
               placeholder="Digite a Cidade"
-              value={data.businessAddress.city}
+              value={data.business_address.city}
               onChange={(event) =>
-                setValue('businessAddress', {
-                  ...data.businessAddress,
+                setValue('business_address', {
+                  ...data.business_address,
                   city: event.target.value
                 })
               }
-              errors={errors.businessAddress}
-              containerStyle={{ marginRight: '2.5rem', width: '32rem' }}
+              errors={errors.business_address}
+              containerStyle={{ marginRight: '2.5rem', width: '25rem' }}
             />
             <Input
-              name="businessAddressUf"
+              name="business_address_uf"
               label="UF"
               type="text"
               placeholder="XX"
-              value={data.businessAddress.uf}
+              value={data.business_address.uf}
               onChange={(event) =>
-                setValue('businessAddress', {
-                  ...data.businessAddress,
+                setValue('business_address', {
+                  ...data.business_address,
                   uf: event.target.value
                 })
               }
-              errors={errors.businessAddress}
+              errors={errors.business_address}
               containerStyle={{ width: '5rem' }}
             />
           </HorizontalContainer>
@@ -410,110 +448,112 @@ export function Registration() {
         <FieldsContainer>
           <HorizontalContainer>
             <Input
-              name="homeAddressStreet"
+              name="home_address_cep"
+              label="CEP"
+              type="text"
+              placeholder="xxxxx-xxx"
+              value={data.home_address.cep}
+              onChange={(event) =>
+                setValue('home_address', {
+                  ...data.home_address,
+                  cep: event.target.value
+                })
+              }
+              onBlur={handleFindHomeAddress}
+              errors={errors.home_address}
+              containerStyle={{ marginRight: '2.5rem', width: '13.125rem' }}
+            />
+            <Input
+              name="home_address_street"
               label="Endereço residencial"
               type="text"
               placeholder="Digite o logradouro"
-              value={data.homeAddress.street}
+              value={data.home_address.street}
               onChange={(event) =>
-                setValue('homeAddress', {
-                  ...data.homeAddress,
+                setValue('home_address', {
+                  ...data.home_address,
                   street: event.target.value
                 })
               }
-              errors={errors.homeAddress}
+              errors={errors.home_address}
               containerStyle={{ marginRight: '2.5rem', width: '50rem' }}
             />
             <Input
-              name="homeAddressNumber"
+              name="home_address_number"
               label="Nº"
               type="text"
               placeholder="xxxx"
-              value={data.homeAddress.number}
+              value={data.home_address.number}
               onChange={(event) =>
-                setValue('homeAddress', {
-                  ...data.homeAddress,
+                setValue('home_address', {
+                  ...data.home_address,
                   number: event.target.value
                 })
               }
-              errors={errors.homeAddress}
+              errors={errors.home_address}
               containerStyle={{ marginRight: '5.625rem', width: '6.875rem' }}
-            />
-            <Input
-              name="homeAddressComplement"
-              label="Complemento"
-              type="text"
-              placeholder="Digite o Complemento"
-              value={data.homeAddress.complement}
-              onChange={(event) =>
-                setValue('homeAddress', {
-                  ...data.homeAddress,
-                  complement: event.target.value
-                })
-              }
-              errors={errors.homeAddress}
-              containerStyle={{ width: '21rem' }}
             />
           </HorizontalContainer>
           <HorizontalContainer>
             <Input
-              name="homeAddressDistrict"
+              name="home_address_complement"
+              label="Complemento"
+              type="text"
+              placeholder="Digite o Complemento"
+              value={data.home_address.complement}
+              onChange={(event) =>
+                setValue('home_address', {
+                  ...data.home_address,
+                  complement: event.target.value
+                })
+              }
+              errors={errors.home_address}
+              containerStyle={{ marginRight: '2.5rem', width: '18rem' }}
+            />
+            <Input
+              name="home_address_district"
               label="Bairro"
               type="text"
               placeholder="Digite o bairro"
-              value={data.homeAddress.district}
+              value={data.home_address.district}
               onChange={(event) =>
-                setValue('homeAddress', {
-                  ...data.homeAddress,
+                setValue('home_address', {
+                  ...data.home_address,
                   district: event.target.value
                 })
               }
-              errors={errors.homeAddress}
-              containerStyle={{ marginRight: '2.5rem', width: '25.25rem' }}
+              errors={errors.home_address}
+              containerStyle={{ marginRight: '2.5rem', width: '22.25rem' }}
             />
+
             <Input
-              name="homeAddressCep"
-              label="CEP"
-              type="text"
-              placeholder="xxxxx-xxx"
-              value={data.homeAddress.cep}
-              onChange={(event) =>
-                setValue('homeAddress', {
-                  ...data.homeAddress,
-                  cep: event.target.value
-                })
-              }
-              errors={errors.homeAddress}
-              containerStyle={{ marginRight: '5.625rem', width: '13.125rem' }}
-            />
-            <Input
-              name="homeAddressCity"
+              name="home_address_city"
               label="Cidade"
               type="text"
               placeholder="Digite a Cidade"
-              value={data.homeAddress.city}
+              value={data.home_address.city}
               onChange={(event) =>
-                setValue('homeAddress', {
-                  ...data.homeAddress,
+                setValue('home_address', {
+                  ...data.home_address,
                   city: event.target.value
                 })
               }
-              errors={errors.homeAddress}
-              containerStyle={{ marginRight: '2.5rem', width: '32rem' }}
+              errors={errors.home_address}
+              containerStyle={{ marginRight: '2.5rem', width: '25rem' }}
             />
             <Input
-              name="homeAddressUf"
+              name="home_address_uf"
               label="UF"
               type="text"
               placeholder="XX"
-              value={data.homeAddress.uf}
+              value={data.home_address.uf}
               onChange={(event) =>
-                setValue('homeAddress', {
-                  ...data.homeAddress,
+                setValue('home_address', {
+                  ...data.home_address,
                   uf: event.target.value
                 })
               }
-              errors={errors.homeAddress}
+              errors={errors.home_address}
               containerStyle={{ width: '5rem' }}
             />
           </HorizontalContainer>
@@ -551,6 +591,7 @@ export function Registration() {
               height: '3.75rem',
               width: '11.25rem'
             }}
+            type="submit"
           >
             Salvar e Prosseguir
           </Button>

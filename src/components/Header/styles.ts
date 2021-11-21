@@ -19,4 +19,21 @@ export const Container = styled.div`
     font-size: 1.5rem;
     line-height: 1.75rem;
   }
+
+  div {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    p {
+      margin-right: 1rem;
+    }
+
+    button {
+      background: none;
+      color: var(--white);
+      font-size: 1.125rem;
+      line-height: 1.3125rem;
+    }
+  }
 `
