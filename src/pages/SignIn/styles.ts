@@ -38,7 +38,7 @@ export const Container = styled.div`
     display: flex;
     filter: drop-shadow(15px 15px 42px rgba(0, 0, 0, 0.7));
     flex-direction: column;
-    height: 16.875rem;
+    height: 18rem;
     padding: 2.28rem;
     width: 28.125rem;
   }

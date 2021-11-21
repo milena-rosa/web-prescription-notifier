@@ -3,6 +3,8 @@ import styled, { css } from 'styled-components'
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
+  height: 3.25rem;
+  margin-bottom: 2rem;
 `
 
 interface InputContainerProps {

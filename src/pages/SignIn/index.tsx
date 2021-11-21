@@ -49,7 +49,7 @@ export const SignIn: React.FC = () => {
           value={user}
           onChange={handleChange('user')}
           errors={errors.user}
-          containerStyle={{ marginBottom: '1.875rem', width: '18.3425rem' }}
+          containerStyle={{ width: '18.3425rem' }}
         />
         <SignInInput
           name="password"
@@ -59,7 +59,7 @@ export const SignIn: React.FC = () => {
           value={password}
           onChange={handleChange('password')}
           errors={errors.password}
-          containerStyle={{ marginBottom: '1.875rem', width: '18.3425rem' }}
+          containerStyle={{ width: '18.3425rem' }}
         />
         <Button type="submit">Entrar</Button>
       </form>
