@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# web-prescription-notifier
 
 ## Clonar repositório
 `git clone https://github.com/milena-rosa/web-prescription-notifier.git`
