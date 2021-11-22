@@ -10,7 +10,7 @@ export function setupAPIClient(ctx = undefined) {
   const api = axios.create({
     baseURL: 'http://localhost:3333',
     headers: {
-      Authorization: `Bearer ${cookies['prescription_notifier.refreshToken']}`
+      Authorization: `Bearer ${cookies['prescription_notifier.token']}`
     }
   })
 
@@ -38,9 +38,9 @@ export function setupAPIClient(ctx = undefined) {
                 setCookie(ctx, 'prescription_notifier.token', token, cookiesOptions)
                 setCookie(ctx, 'prescription_notifier.refreshToken', refreshToken, cookiesOptions)
 
-                api.defaults.headers.common.Authorization = `Bearer ${refreshToken}`
+                api.defaults.headers.common.Authorization = `Bearer ${token}`
 
-                failedRequestsQueue.forEach((request) => request.onSuccess(refreshToken))
+                failedRequestsQueue.forEach((request) => request.onSuccess(token))
                 failedRequestsQueue = []
               })
               .catch((error) => {
